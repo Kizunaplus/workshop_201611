@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface ChatNotify {
 
-	void notify(String name, UUID id, String message);
+	void notify(String name, UUID id, String message, UUID messageId);
 }

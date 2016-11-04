@@ -19,7 +19,7 @@ public class BotClassLoader {
 	 * インスタンス
 	 */
 	private Object instance;
-	
+
 	/**
 	 * ID
 	 */
@@ -33,7 +33,7 @@ public class BotClassLoader {
 	 */
 	public BotClassLoader(String className, ChatNotify notify) throws Exception {
 		loadClass(className, notify);
-		
+
 		this.botId = UUID.randomUUID();
 	}
 
@@ -151,19 +151,20 @@ public class BotClassLoader {
 	 * @param message
 	 * @param time
 	 */
-	public void notify(final UUID id, final String message, final Date time) {
+	public void notify(final UUID id, final String message, final Date time,
+			final UUID messageId) {
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				Method method = getMethod("notify", new Class[] { UUID.class,
-						String.class, Date.class });
+						String.class, Date.class, UUID.class });
 				if (method != null) {
 					method.setAccessible(true);
 					try {
 						Thread.sleep(500);
 						method.invoke(instance, new Object[] { id, message,
-								time });
+								time, messageId });
 					} catch (IllegalAccessException | IllegalArgumentException
 							| InvocationTargetException | InterruptedException e) {
 						e.printStackTrace();

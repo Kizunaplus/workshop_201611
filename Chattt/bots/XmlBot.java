@@ -29,6 +29,11 @@ public class XmlBot {
 	XmlBotSetting setting;
 
 	/**
+	 * 前回のメッセージ
+	 */
+	UUID prevMessage;
+
+	/**
 	 * 初期化処理
 	 * 
 	 * @param argNotify
@@ -61,7 +66,12 @@ public class XmlBot {
 	}
 
 	@BotAnnotation(value = "notify")
-	public void notify(UUID id, String message, Date time) {
+	public void notify(UUID id, String message, Date time, UUID messageId) {
+		if (messageId == prevMessage) {
+			// すでに返答した話題
+			return;
+		}
+
 		for (KeyValuePair patternValue : setting.getMessageRegex()) {
 			// 判定するパターンを生成
 			Pattern p = Pattern.compile(patternValue.getKey());
@@ -70,7 +80,8 @@ public class XmlBot {
 			// 画面表示
 			if (m.find()) {
 				this.notiry.notify(setting.getName(), setting.getId(),
-						patternValue.getValue());
+						patternValue.getValue(), messageId);
+				prevMessage = messageId;
 			}
 		}
 

@@ -87,13 +87,6 @@ public class UserPanel extends JComponent implements ChatNotify {
 		messages = new ArrayList<>();
 		bots = new Bots();
 		try {
-			bots.append("Bot1", this);
-			bots.append("Bot2", this);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-
-		}
-		try {
 			String currentPath = System.getProperty("user.dir");
 
 			// 背景イメージの読み込み
@@ -214,7 +207,30 @@ public class UserPanel extends JComponent implements ChatNotify {
 	 */
 	public void notify(String message) {
 		UUID id = new UUID(0, 0);
-		notify("ユーザ", id, message);
+		if (message.toLowerCase().startsWith("add ")) {
+			String botName = message.substring("add ".length());
+			try {
+				bots.append(botName, this);
+			} catch (Exception ex) {
+				notify("システム", id, "そんなボットはいないよ", UUID.randomUUID());
+				return;
+			}
+			notify("システム", id, botName + "ボットがインしたよ", UUID.randomUUID());
+			return;
+		} else if (message.toLowerCase().startsWith("remove ")) {
+			String botName = message.substring("Remove ".length());
+			try {
+				bots.remove(botName);
+			} catch (Exception ex) {
+				notify("システム", id, "そんなボットはいないよ", UUID.randomUUID());
+				return;
+			}
+			notify("システム", id, botName + "ボットを退席したよ", UUID.randomUUID());
+
+			return;
+		}
+
+		notify("ユーザ", id, message, UUID.randomUUID());
 	}
 
 	/**
@@ -223,7 +239,7 @@ public class UserPanel extends JComponent implements ChatNotify {
 	 * @param message
 	 *            メッセージ
 	 */
-	public void notify(String name, UUID id, String message) {
+	public void notify(String name, UUID id, String message, UUID messageId) {
 		Date sendTime = new Date();
 		messageStartPosition = messages.size() - 1;
 		messages.add(String.format("%s : %s", name, message));
@@ -233,7 +249,7 @@ public class UserPanel extends JComponent implements ChatNotify {
 				continue;
 			}
 
-			bot.notify(id, message, sendTime);
+			bot.notify(id, message, sendTime, messageId);
 		}
 		this.repaint();
 	}
