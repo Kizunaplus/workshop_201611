@@ -5,26 +5,47 @@
    <string>85162cb7-1358-4629-aca5-3a99095aa854</string>
   </void>
   <void property="image">
-   <string>kani-illust3.png</string>
+   <string>Bot1_2.png</string>
   </void>
   <void property="messageRegex">
    <void method="add">
     <object class="jp.co.kizuna.plus.chat.bot.loader.KeyValuePair">
      <void property="key">
-      <string>こんにちは</string>
+      <string>おはよう</string>
      </void>
      <void property="value">
-      <string>こんにちは</string>
+      <string>うるせー</string>
      </void>
     </object>
    </void>
+      <void method="add">
+    <object class="jp.co.kizuna.plus.chat.bot.loader.KeyValuePair">
+     <void property="key">
+      <string>.*</string>
+     </void>
+     <void property="value">
+      <string>耳うめぇ～</string>
+     </void>
+    </object>
+   </void>
+     <void method="add">
+    <object class="jp.co.kizuna.plus.chat.bot.loader.KeyValuePair">
+     <void property="key">
+      <string>ごじゃっぺ</string>
+     </void>
+     <void property="value">
+      <string>何言ってるの？？？</string>
+     </void>
+    </object>
+   </void>
+
    <void method="add">
     <object class="jp.co.kizuna.plus.chat.bot.loader.KeyValuePair">
      <void property="key">
-      <string>おはよう</string>
+      <string>こんにちは</string>
      </void>
      <void property="value">
-      <string>おはよう</string>
+      <string>黙れよ</string>
      </void>
     </object>
    </void>
@@ -34,13 +55,13 @@
       <string>こんばんは</string>
      </void>
      <void property="value">
-      <string>こんばんは</string>
+      <string>こっちくんな</string>
      </void>
     </object>
    </void>
   </void>
   <void property="name">
-   <string>ロボット2</string>
+   <string>わとそんくん</string>
   </void>
  </object>
 </java>
