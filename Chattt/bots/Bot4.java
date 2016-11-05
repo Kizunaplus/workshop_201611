@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,15 +19,17 @@ public class Bot4 {
 	ChatNotify notiry;
 
 	UUID id;
-	
+
 	private ArrayList<String> messageLog;
-	
+
 	private int favorability;
-	
+
 	private List<String> favorites;
-	
+
 	private List<String> dislikes;
-	
+
+	private List<UUID> preMessageIDList;
+
 	@BotAnnotation(value = "init")
 	public void init(ChatNotify argNotify) {
 		this.notiry = argNotify;
@@ -37,6 +38,7 @@ public class Bot4 {
 		this.favorability = 50;
 		this.favorites = Arrays.asList("イチゴ", "メロン", "苺", "いちご", "めろん");
 		this.dislikes = Arrays.asList("ミカン", "リンゴ", "みかん", "蜜柑", "りんご", "林檎");
+		this.preMessageIDList = new ArrayList<UUID>();
 	}
 
 	@BotAnnotation(value = "getUUID")
@@ -49,15 +51,19 @@ public class Bot4 {
 		if (this.id.equals(id)) {
 			return;
 		}
-		
+		if (preMessageIDList.contains(messageId)) {
+			return;
+		}
+		preMessageIDList.add(messageId);
+
 		if (!(this.favorability > 0)) {
 			this.notiry.notify("ロボット4", this.id, "もう話したくないよ", messageId);
 			System.out.println(this.favorability);
 			return;
 		}
-		
+
 		this.messageLog.add(0, message);
-		if (this.continues(this.messageLog, 3)){
+		if (this.continues(this.messageLog, 3)) {
 			this.notiry.notify("ロボット4", this.id, "しつこい", messageId);
 			this.favorability -= 20;
 			System.out.println(this.favorability);
@@ -71,14 +77,15 @@ public class Bot4 {
 		// 結果を出力してみる
 		String name = "そんなもの知らない。";
 		for (Token token : tokens) {
-			System.out.println(token.getSurfaceForm() + "\t" + token.getAllFeatures());
+			System.out.println(token.getSurfaceForm() + "\t"
+					+ token.getAllFeatures());
 			if (token.getAllFeatures().contains("名詞")) {
-				if (this.favorites.contains(token.getSurfaceForm())){
+				if (this.favorites.contains(token.getSurfaceForm())) {
 					name = String.format("%sっていいよね", token.getSurfaceForm());
 					this.favorability += 10;
 					System.out.println(this.favorability);
 					break;
-				} else if (this.dislikes.contains(token.getSurfaceForm())){
+				} else if (this.dislikes.contains(token.getSurfaceForm())) {
 					name = String.format("%sは嫌いだよ", token.getSurfaceForm());
 					this.favorability -= 10;
 					System.out.println(this.favorability);
@@ -88,20 +95,23 @@ public class Bot4 {
 		}
 		this.notiry.notify("ロボット4", this.id, name, messageId);
 	}
-	
+
 	/**
 	 * メッセージが指定回数連続しているか
-	 * @param messageLog	メッセージログ
-	 * @param max			回数
+	 * 
+	 * @param messageLog
+	 *            メッセージログ
+	 * @param max
+	 *            回数
 	 * @return
 	 */
-	private boolean continues(ArrayList<String> messageLog, int max){
+	private boolean continues(ArrayList<String> messageLog, int max) {
 		int count = 0;
 		String prevMessage = "";
-		for (String message : messageLog){
-			if (prevMessage.equals(message)){
+		for (String message : messageLog) {
+			if (prevMessage.equals(message)) {
 				count++;
-				if (count >= max - 1){
+				if (count >= max - 1) {
 					return true;
 				}
 			} else {
@@ -111,7 +121,7 @@ public class Bot4 {
 		}
 		return false;
 	}
-	
+
 	@BotAnnotation(value = "getImage")
 	/**
 	 * BOTのイメージを取得

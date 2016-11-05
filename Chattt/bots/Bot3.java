@@ -1,18 +1,21 @@
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import org.atilika.kuromoji.Token;
-import org.atilika.kuromoji.Tokenizer;
 
 import jp.co.kizuna.plus.chat.bot.loader.BotAnnotation;
 import jp.co.kizuna.plus.chat.bot.loader.XmlBotSetting;
 import jp.co.kizuna.plus.chat.main.window.ChatNotify;
 
+import org.atilika.kuromoji.Token;
+import org.atilika.kuromoji.Tokenizer;
+
 public class Bot3 {
 	ChatNotify notiry;
 
 	UUID id;
+
+	private List<UUID> preMessageIDList;
 
 	/**
 	 * ロボット設定
@@ -23,6 +26,7 @@ public class Bot3 {
 	public void init(ChatNotify argNotify) {
 		this.notiry = argNotify;
 		this.id = UUID.randomUUID();
+		this.preMessageIDList = new ArrayList<UUID>();
 	}
 
 	@BotAnnotation(value = "getUUID")
@@ -35,6 +39,10 @@ public class Bot3 {
 		if (this.id.equals(id)) {
 			return;
 		}
+		if (preMessageIDList.contains(messageId)) {
+			return;
+		}
+		preMessageIDList.add(messageId);
 
 		// この２行で解析できる
 		Tokenizer tokenizer = Tokenizer.builder().build();
@@ -43,7 +51,8 @@ public class Bot3 {
 		// 結果を出力してみる
 		String name = "そんなもの知らない。";
 		for (Token token : tokens) {
-			System.out.println(token.getSurfaceForm() + ":" + token.getPartOfSpeech());
+			System.out.println(token.getSurfaceForm() + ":"
+					+ token.getPartOfSpeech());
 
 			if (token.getSurfaceForm().contains("おはようございます")) {
 				name = String.format("%s", token.getSurfaceForm());
